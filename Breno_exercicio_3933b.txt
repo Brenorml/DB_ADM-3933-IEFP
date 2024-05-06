@@ -1,0 +1,358 @@
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 119
+Server version: 8.0.31 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database 3933B;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use 3933B;
+Database changed
+mysql> create table consumidores;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table consumidores (id int, nome varchar(255), password varchar(255));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table consumidores (id int, nome varchar(255), email varchar(255), password varchar(255));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show consumidores;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'consumidores' at line 1
+mysql> describe consumidores;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| id       | int          | YES  |     | NULL    |       |
+| nome     | varchar(255) | YES  |     | NULL    |       |
+| email    | varchar(255) | YES  |     | NULL    |       |
+| password | varchar(255) | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into consumidores (id, nome, email, password) values (1, 'Consumidor A', 'exemploA@email.com', 'passwordA')
+    -> insert into consumidores (id, nome, email, password) values (1, 'Consumidor A', 'exemploA@email.com', 'passwordA')^C
+mysql> insert into consumidores (id, nome, email, password) values (1, 'Consumidor A', 'exemploA@email.com', 'passwordA'),
+    -> (2, 'Consumidor B', 'exemploB@email.com', 'passwordB'),
+    -> (3, 'Consumidor C', 'exemploC@email.com', 'passwordC');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> update Consumidor set nome = 'Consumidor A1'  where nome id = 1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id = 1' at line 1
+mysql> update Consumidor set nome = 'Consumidor A1'  where id = 1;
+ERROR 1146 (42S02): Table '3933b.consumidor' doesn't exist
+mysql> update Consumidores set nome = 'Consumidor A1'  where id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Consumidores;
++------+---------------+--------------------+-----------+
+| id   | nome          | email              | password  |
++------+---------------+--------------------+-----------+
+|    1 | Consumidor A1 | exemploA@email.com | passwordA |
+|    2 | Consumidor B  | exemploB@email.com | passwordB |
+|    3 | Consumidor C  | exemploC@email.com | passwordC |
++------+---------------+--------------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> delete from consumidores where id = 3;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from Consumidores;
++------+---------------+--------------------+-----------+
+| id   | nome          | email              | password  |
++------+---------------+--------------------+-----------+
+|    1 | Consumidor A1 | exemploA@email.com | passwordA |
+|    2 | Consumidor B  | exemploB@email.com | passwordB |
++------+---------------+--------------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> create table produtos (id int, nome varchar(255), preço decimal(10,2), quantidade_em_stock int);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into produtos (id, nome, preço, quantidade_em_stock) values (1, 'maçã', 1.99, 10),
+    -> (2, 'laranja', 0.99, 20),
+    -> (3, 'banana', 0.59, 30);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> update produtos set preço = 2.99 where id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from produtos;
++------+---------+-------+---------------------+
+| id   | nome    | preço | quantidade_em_stock |
++------+---------+-------+---------------------+
+|    1 | maçã    |  2.99 |                  10 |
+|    2 | laranja |  0.99 |                  20 |
+|    3 | banana  |  0.59 |                  30 |
++------+---------+-------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> delete from produtos where id = 3;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from produtos;
++------+---------+-------+---------------------+
+| id   | nome    | preço | quantidade_em_stock |
++------+---------+-------+---------------------+
+|    1 | maçã    |  2.99 |                  10 |
+|    2 | laranja |  0.99 |                  20 |
++------+---------+-------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from produtos where preço <2.00;
++------+---------+-------+---------------------+
+| id   | nome    | preço | quantidade_em_stock |
++------+---------+-------+---------------------+
+|    2 | laranja |  0.99 |                  20 |
++------+---------+-------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from produtos where name = 'maça';
+ERROR 1054 (42S22): Unknown column 'name' in 'where clause'
+mysql> select * from produtos where name = 'maçã';
+ERROR 1054 (42S22): Unknown column 'name' in 'where clause'
+mysql> select * from produtos where nome = 'maçã';
++------+------+-------+---------------------+
+| id   | nome | preço | quantidade_em_stock |
++------+------+-------+---------------------+
+|    1 | maçã |  2.99 |                  10 |
++------+------+-------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from produtos where quantidade_em_stock <30;
++------+---------+-------+---------------------+
+| id   | nome    | preço | quantidade_em_stock |
++------+---------+-------+---------------------+
+|    1 | maçã    |  2.99 |                  10 |
+|    2 | laranja |  0.99 |                  20 |
++------+---------+-------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> create table encomendas (id int, nfornecedor int, data datetime, total decimal(10,2));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into encomendas (id, nfornecedor, data, total) values
+    -> (1, 101, '2023-07-23 12:00:00', 10.00),
+    -> (2, 102, '2023-07-23 13:00:00', 20.00),
+    -> (3, 103, '2023-07-23 14:00:00', 30.00);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from encomendas;
++------+-------------+---------------------+-------+
+| id   | nfornecedor | data                | total |
++------+-------------+---------------------+-------+
+|    1 |         101 | 2023-07-23 12:00:00 | 10.00 |
+|    2 |         102 | 2023-07-23 13:00:00 | 20.00 |
+|    3 |         103 | 2023-07-23 14:00:00 | 30.00 |
++------+-------------+---------------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> update encomendas set total = 20.00 where id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> delete from encomendas where id = 3;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from encomendas where id = 1;
++------+-------------+---------------------+-------+
+| id   | nfornecedor | data                | total |
++------+-------------+---------------------+-------+
+|    1 |         101 | 2023-07-23 12:00:00 | 20.00 |
++------+-------------+---------------------+-------+
+1 row in set (0.00 sec)
+
+mysql> select * from encomendas where data = '2023-07-23';
+Empty set (0.01 sec)
+
+mysql> select * from encomendas where data = '2023-07-23%';
+Empty set, 1 warning (0.00 sec)
+
+mysql> select * from encomendas where data = '%2023-07-23%';
+ERROR 1525 (HY000): Incorrect DATETIME value: '%2023-07-23%'
+mysql> select * from encomendas where data = '2023-07-23%';
+Empty set, 1 warning (0.00 sec)
+
+mysql> select * from encomendas where data like '2023-07-23%';
++------+-------------+---------------------+-------+
+| id   | nfornecedor | data                | total |
++------+-------------+---------------------+-------+
+|    1 |         101 | 2023-07-23 12:00:00 | 20.00 |
+|    2 |         102 | 2023-07-23 13:00:00 | 20.00 |
++------+-------------+---------------------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from produtos where total > 10.00;
+ERROR 1054 (42S22): Unknown column 'total' in 'where clause'
+mysql> select * from encomendas where total > 10.00;
++------+-------------+---------------------+-------+
+| id   | nfornecedor | data                | total |
++------+-------------+---------------------+-------+
+|    1 |         101 | 2023-07-23 12:00:00 | 20.00 |
+|    2 |         102 | 2023-07-23 13:00:00 | 20.00 |
++------+-------------+---------------------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from encomendas;
++------+-------------+---------------------+-------+
+| id   | nfornecedor | data                | total |
++------+-------------+---------------------+-------+
+|    1 |         101 | 2023-07-23 12:00:00 | 20.00 |
+|    2 |         102 | 2023-07-23 13:00:00 | 20.00 |
++------+-------------+---------------------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from encomendas order by nome;
+ERROR 1054 (42S22): Unknown column 'nome' in 'order clause'
+mysql> select * from encomendas where order by nome;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by nome' at line 1
+mysql> select * from encomendas where total > 0.00 order by nome;
+ERROR 1054 (42S22): Unknown column 'nome' in 'order clause'
+mysql> select * from produtos where preço > 0.00 order by nome;
++------+---------+-------+---------------------+
+| id   | nome    | preço | quantidade_em_stock |
++------+---------+-------+---------------------+
+|    2 | laranja |  0.99 |                  20 |
+|    1 | maçã    |  2.99 |                  10 |
++------+---------+-------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> select count(quantidade_em_stock) from produtos where quantidade_em_stock > 0;
++----------------------------+
+| count(quantidade_em_stock) |
++----------------------------+
+|                          2 |
++----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select avg([all] preço) from produtos where preço > 0.00;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[all] preço) from produtos where preço > 0.00' at line 1
+mysql> select avg([all]preço) from produtos where preço > 0.00;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[all]preço) from produtos where preço > 0.00' at line 1
+mysql> select AVG(ALL, preço) from produtos where preço > 0.00;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', preço) from produtos where preço > 0.00' at line 1
+mysql> select AVG(preço) from produtos where preço > 0.00;
++------------+
+| AVG(preço) |
++------------+
+|   1.990000 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select SUM(quantidade_em_stock) from produtos where quantidade_em_stock > 0;
++--------------------------+
+| SUM(quantidade_em_stock) |
++--------------------------+
+|                       30 |
++--------------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from produtos where nome = 'laranja' and preço > 0.10;
++------+---------+-------+---------------------+
+| id   | nome    | preço | quantidade_em_stock |
++------+---------+-------+---------------------+
+|    2 | laranja |  0.99 |                  20 |
++------+---------+-------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table consumidores add constraint id primary key (id);
+Query OK, 2 rows affected (0.02 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> describe consumidores;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| id       | int          | NO   | PRI | NULL    |       |
+| nome     | varchar(255) | YES  |     | NULL    |       |
+| email    | varchar(255) | YES  |     | NULL    |       |
+| password | varchar(255) | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select encomendas.total union produtos.quantidade_em_stock;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'produtos.quantidade_em_stock' at line 1
+mysql> select total from encomendas intersect select quantidade_em_stock from produtos;
++-------+
+| total |
++-------+
+| 20.00 |
++-------+
+1 row in set (0.00 sec)
+
+mysql>
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 31
+Server version: 8.0.31 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use 3933b;
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_3933b |
++-----------------+
+| consumidores    |
+| encomendas      |
+| produtos        |
++-----------------+
+3 rows in set (0.01 sec)
+
+mysql> select consumidores.id, encomendas.id, nome, data from consumidores inner join encomendas on consumidores.id = enencomendas.id;
+ERROR 1054 (42S22): Unknown column 'enencomendas.id' in 'on clause'
+mysql> select consumidores.id, encomendas.id, nome, data from consumidores inner join encomendas on consumidores.id = encomendas.id;
++----+------+---------------+---------------------+
+| id | id   | nome          | data                |
++----+------+---------------+---------------------+
+|  1 |    1 | Consumidor A1 | 2023-07-23 12:00:00 |
+|  2 |    2 | Consumidor B  | 2023-07-23 13:00:00 |
++----+------+---------------+---------------------+
+2 rows in set (0.01 sec)
+
+mysql> select * from encomendas where datetime(data) >= '2023-07-23 12:00:00' and datetime(data) <= '2023-07-23 13:00:00';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(data) >= '2023-07-23 12:00:00' and datetime(data) <= '2023-07-23 13:00:00'' at line 1
+mysql> select * from encomendas where data between -2023-07-23 12:00:00' and '2023-07-23 13:00:00';
+    '>
+    '> ^C
+mysql> select * from encomendas where data between '2023-07-23 12:00:00' and '2023-07-23 13:00:00';
++------+-------------+---------------------+-------+
+| id   | nfornecedor | data                | total |
++------+-------------+---------------------+-------+
+|    1 |         101 | 2023-07-23 12:00:00 | 20.00 |
+|    2 |         102 | 2023-07-23 13:00:00 | 20.00 |
++------+-------------+---------------------+-------+
+2 rows in set (0.01 sec)
+
+mysql> select * from encomendas where date(data) >= '2023-07-23 12:00:00' and date(data) <= '2023-07-23 13:00:00';
+Empty set (0.01 sec)
+
+mysql> select * from produtos where preço between 0.01 and 3.00;
++------+---------+-------+---------------------+
+| id   | nome    | preço | quantidade_em_stock |
++------+---------+-------+---------------------+
+|    1 | maçã    |  2.99 |                  10 |
+|    2 | laranja |  0.99 |                  20 |
++------+---------+-------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql>

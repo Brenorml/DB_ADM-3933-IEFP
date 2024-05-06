@@ -1,0 +1,145 @@
+CREATE DATABASE 3933C;
+
+USE 3933C;
+
+CREATE TABLE Alunos (
+	ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	Nome VARCHAR(50) NOT NULL,
+	NIF INT NOT NULL UNIQUE,
+	Endereco CHAR(25),
+	Codigo_Postal BINARY(0000.000),
+	Idade TINYINT,
+	Telefone CHAR(25) NOT NULL,
+	email VARCHAR(100) NOT NULL,
+	Nome_Curso VARCHAR(50) NOT NULL	
+	);
+	
+CREATE TABLE Professores (
+	ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	Nome VARCHAR(50) NOT NULL,
+	NIF INT NOT NULL UNIQUE,	
+	Telefone VARCHAR(50) NOT NULL,
+	email VARCHAR(100) NOT NULL,
+	Disciplina VARCHAR(50) NOT NULL,	
+	Data_Inicio_Contrato DATE NOT NULL,
+	Data_Fim_Contrato DATE NOT NULL		
+	);
+
+CREATE TABLE Cursos (
+	ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	Nome VARCHAR(250) NOT NULL,
+	Codigo_Disciplina INT UNIQUE,
+	Tipo_ensino VARCHAR(50),
+	Data_Inicio DATE
+	);
+	
+CREATE TABLE Disciplinas (
+	ID INT PRIMARY KEY NOT NULL,
+	Nome VARCHAR(250) NOT NULL,
+	Curso_ID INT,
+	Professor_ID INT,
+	Tipo_ensino CHAR(25),
+	Observacoes TEXT(500),
+	CONSTRAINT FK_Curso_ID FOREIGN KEY(Curso_ID) REFERENCES Cursos(Codigo_Disciplina),
+	CONSTRAINT FK_Professor_ID FOREIGN KEY(Professor_ID) REFERENCES Professores(ID)
+	);
+
+CREATE TABLE Matriculas (
+	ID INT PRIMARY KEY NOT NULL,
+	Matricula_ID INT NOT NULL,
+	Curso_ID INT NULL,
+	Data_Matricula DATETIME,
+	CONSTRAINT FK_Matricula_ID FOREIGN KEY(Matricula_ID) REFERENCES Alunos(ID),
+	CONSTRAINT FK_Curso_ID FOREIGN KEY(Curso_ID) REFERENCES Cursos(ID)
+	);
+	
+CREATE TABLE Pagamentos(
+	ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	Professor_PGTO_ID INT NOT NULL,	
+	Salario DECIMAL(18,2) DEFAULT 1000.00,
+	Data_pagamento DATETIME,
+	Horario_consulta TIMESTAMP,
+	CONSTRAINT FK_Professor_PGTO_ID FOREIGN KEY(Professor_PGTO_ID) REFERENCES Professores(ID)
+	);
+
+CREATE TABLE Bolsas(
+	ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	Aluno_ID INT NOT NULL,
+	Valor_bolsa DECIMAL(4,2) DEFAULT 50.00,
+	CONSTRAINT FK_Aluno_ID FOREIGN KEY(Aluno_ID) REFERENCES Alunos(ID)
+	);
+
+INSERT INTO Alunos (ID, Nome, NIF, Endereco, Codigo_Postal, Idade, Telefone, email, Nome_Curso) VALUES
+	(1, 'Breno Lucena', 111111111, 'Rua dos alunos, 1', 0000.001, 40, '212121222', 'aluno1@unixablau.pt', 'Engenharia Informática'),
+	(2, 'João Silva', 222222222, 'Rua dos alunos, 2', 0000.011, 35, '313131333', 'aluno2@unixablau.pt', 'Engenharia Informática'),
+	(3, 'Inês Figueiredo', 333333333, 'Rua dos alunos, 3', 0000.111, 25, '414141444', 'aluno3@unixablau.pt', 'Data Science'),
+	(4, 'Rita Mair', 444444444, 'Rua dos alunos, 4', 0001.111, 35, '515151555', 'aluno4@unixablau.pt', 'Administrador de Redes e Segurança'),
+	(5, 'Martinho Ferreira', 555555555, 'Rua dos alunos, 5', 0011.111, 26, '616161666', 'aluno5@unixablau.pt', 'Arquiteto de Soluções');
+
+INSERT INTO Professores (ID,	Nome, NIF, Telefone, email, Disciplina,	Data_Inicio_Contrato, Data_Fim_Contrato) VALUES
+	(1, 'Flávio Moniz', 666666666, '717171777', 'professor1@unixablau.pt', 'Administração Banco de Dados', '2023-01-02', '2023-12-30'),
+	(2, 'Célia Duarte', 777777777, '818181888', 'professor2@unixablau.pt', 'Fundamentos COBOL', '2023-01-02', '2023-06-29'),
+	(3, 'José Teobaldo', 888888888, '919191999', 'professor3@unixablau.pt', 'Modelação de Sistemas Informáticos', '2023-02-02', '2023-07-05'),
+	(4, 'Francisco Cuoco', 999999999, '121212222', 'professor4@unixablau.pt', 'Introdução a Programação', '2023-03-02', '2023-09-08'),
+	(5, 'Maria Batata', 101010101, '323232222', 'professor5@unixablau.pt', 'Laboratório de Programação', '2023-04-02', '2023-11-15');
+
+INSERT INTO Cursos (ID, Nome, Codigo_Disciplina, Tipo_ensino, Data_Inicio) VALUES
+	(1, 'Engenharia Informática', 100, 'Hibrido', '2023-09-01'),
+	(2, 'Data Science', 200, 'Presencial', '2023-09-01'),
+	(3, 'Administrador de Redes e Segurança', 300, 'A distância', '2024-02-15'),
+	(4, 'Arquiteto de Soluções', 400, 'A distância', '2024-02-15');
+
+INSERT INTO Disciplinas (ID, Nome, Curso_ID, Professor_ID, Tipo_ensino, Observacoes) VALUES
+	(1, 'Administração Banco de Dados', 100, 1, 'A distância', 'Não tem pré-requisito'),
+	(2, 'Fundamentos COBOL', 200, 2, 'Presencial', 'Não tem pré-requisito'),	
+	(3, 'Modelação de Sistemas Informáticos', 400, 3, 'A distância', 'Pré-requisito: Introdução a Programação'),	
+	(4, 'Introdução a Programação', 300, 4, 'A distância', 'Não tem pré-requisito'),	
+	(5, 'Laboratório de Programação', 100, 5, 'Presencial', 'Pré-requisito: Introdução a Programação');
+
+INSERT INTO Matriculas (ID, Matricula_ID, Curso_ID, Data_Matricula) VALUES
+	(1, 1, 1, '2023-08-06 09:00:00'),
+	(2, 2, 1, '2023-08-06 09:00:00'),
+	(3, 3, 2, '2023-08-06 09:00:00'),
+	(4, 4, 3, '2023-08-06 09:00:00'),
+	(5, 5, 4, '2023-08-06 09:00:00');
+	
+INSERT INTO Pagamentos(ID, Professor_PGTO_ID, Salario, Data_pagamento, Horario_consulta) VALUES
+	(1, 1, 5500.00, '2024-01-02 09:00:00', ''),
+	(2, 2, 5400.00, '2024-01-03 10:00:00', ''),
+	(3, 3, 5300.00, '2024-01-04 11:00:00', ''),
+	(4, 4, 5200.00, '2024-01-05 12:00:00', ''),
+	(5, 5, 6000.00, '2024-01-06 13:00:00', '');
+	
+INSERT INTO Bolsas(ID,	Aluno_ID, Valor_bolsa) VALUES
+	(1, 1, 90.00),
+	(2, 3, 75.00),
+	(3, 5, 50.00);
+
+
+SELECT * FROM pagamentos;
+SELECT DISTINCT Curso_ID FROM matriculas;
+SELECT * FROM alunos WHERE ID < 3;
+SELECT * FROM professores WHERE id > 1 AND id < 5;
+SELECT * FROM professores WHERE id > 5 OR id = 1;
+SELECT * FROM cursos WHERE Codigo_Disciplina IN (200, 400);
+SELECT * FROM alunos WHERE Idade BETWEEN 26 AND 35;
+SELECT * FROM alunos WHERE Nome_Curso LIKE 'Eng%';
+SELECT * FROM professores ORDER BY Nome ASC;
+SELECT COUNT(Salario) FROM pagamentos WHERE Salario < 6000.00;
+SELECT MIN(Salario) FROM pagamentos;
+SELECT MAX(Salario) FROM pagamentos;
+SELECT AVG(Valor_bolsa) FROM bolsas;
+TRUNCATE TABLE bolsas;
+UPDATE alunos SET Idade = 45 WHERE ID = 2;
+SELECT * FROM pagamentos WHERE salario = 5000.00 + 500.00;
+SELECT * FROM pagamentos WHERE salario != 6000.00;
+SELECT * FROM pagamentos WHERE Salario LIKE '%6%';
+SELECT * FROM disciplinas WHERE Observacoes LIKE '%:%';
+SELECT * FROM disciplinas WHERE Observacoes LIKE 'Não%';
+SELECT * FROM alunos LIMIT 3;
+SELECT * FROM alunos ORDER BY Nome DESC;
+SELECT professores.nome as nomes FROM professores INNER JOIN pagamentos ON pagamentos.professor_pgto_id = professores.id GROUP BY nome HAVING COUNT(pagamentos.salario) < 5400.00;
+SELECT NOW() FROM pagamentos;
+CREATE TEMPORARY TABLE professor_salario(id INT, nome CHAR(25), salario DECIMAL(10,2));
+INSERT INTO professor_salario VALUES (1, 'Flavio', 5000.00), (2, 'Celia', 5000.00), (3, 'Joao', 5000.00);
+SELECT * FROM professor_salario;

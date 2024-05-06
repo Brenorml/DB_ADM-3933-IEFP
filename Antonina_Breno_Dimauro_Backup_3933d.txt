@@ -1,0 +1,204 @@
+CREATE DATABASE  3933d;
+
+USE 3933d;
+
+CREATE TABLE  alunos (
+  ID int NOT NULL AUTO_INCREMENT,
+  Nome varchar(50) NOT NULL,
+  Genero ENUM ('M','F') NOT NULL,
+  NIF int NOT NULL,
+  Endereco char(50) DEFAULT NULL,
+  Codigo_Postal TINYINT NOT NULL,
+  Idade int DEFAULT NULL,
+  Telefone char(20) NOT NULL,
+  Email varchar(100) NOT NULL,
+  CursoID int NOT NULL,
+  PRIMARY KEY (ID),
+  UNIQUE KEY NIF (NIF),
+  CONSTRAINT FK_Codigo_Postal FOREIGN KEY(Codigo_Postal) REFERENCES Distritos(cod_distrito),
+  CONSTRAINT FK_CursoID FOREIGN KEY(CursoID) REFERENCES cursos(id)
+);
+
+-- Inserção de dados na tabela alunos
+INSERT INTO alunos (Nome, Genero, NIF, Endereco, Codigo_Postal, Idade, Telefone, Email, CursoID)
+VALUES
+  ('Breno Lucena', 'M',	 111111111, 'Rua dos alunos, 1', 1, 40, '212121222', 'aluno1@unixablau.pt', 1),
+  ('João Silva', 'M', 222222222, 'Rua dos alunos, 2', 2, 45, '313131333', 'aluno2@unixablau.pt', 1),
+  ('Inês Figueiredo', 'F', 333333333, 'Rua dos alunos, 3', 3, 25, '414141444', 'aluno3@unixablau.pt', 2),
+  ('Rita Mair', 'F', 444444444, 'Rua dos alunos, 4', 4, 35, '515151555', 'aluno4@unixablau.pt', 3),
+  ('Martinho Ferreira', 'M', 555555555, 'Rua dos alunos, 5', 5, 26, '616161666', 'aluno5@unixablau.pt', 4);
+
+-- Criação da tabela cursos
+CREATE TABLE IF NOT EXISTS cursos (
+  ID int NOT NULL AUTO_INCREMENT,
+  Nome varchar(50) NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+-- Inserção de dados na tabela cursos
+INSERT INTO cursos (Nome)
+VALUES
+  ('Engenharia Informática'),
+  ('Data Science'),
+  ('Administrador de Redes e Segurança'),
+  ('Arquiteto de Soluções');
+
+-- Criação da tabela fornecedores
+CREATE TABLE IF NOT EXISTS fornecedores (
+  ID int NOT NULL AUTO_INCREMENT,
+  Nome varchar(50) NOT NULL,
+  Endereco char(50) DEFAULT NULL,
+  Codigo_Postal TINYINT NOT NULL,
+  Observacoes text,
+  PRIMARY KEY (ID),
+  CONSTRAINT FK_Codigo_Postal FOREIGN KEY(Codigo_Postal) REFERENCES Distritos(cod_distrito)  
+);
+
+-- Inserção de dados na tabela fornecedores
+INSERT INTO fornecedores (Nome, Endereco, Codigo_Postal, Observacoes)
+VALUES
+  ('Pegasos', 'Rua Aerea, 23', 10, 'Fornecedor de consumíveis'),
+  ('Arceus POP', 'Avenida dos Treinadores, 8', 11, 'Fornecedor de Merch'),
+  ('Mega Mana', 'Quinta das Gaivotas, 44', 12, 'Fornecedor de Merch'),
+  ('dr. Colress', 'Quinta das Conchas, 97', 13, 'Fornecedor Papel'),
+  ('Blademaster', 'Rua da Ascensão, 55', 14, 'Fornecedor Magic');
+
+-- Criação da tabela professores
+CREATE TABLE IF NOT EXISTS professores (
+  ID int NOT NULL AUTO_INCREMENT,
+  Nome varchar(50) NOT NULL,
+  Disciplina varchar(50) NOT NULL,
+  Email varchar(100) NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+-- Inserção de dados na tabela professores
+INSERT INTO professores (Nome, Disciplina, Email)
+VALUES
+  ('Prof. Carlos', 'Programação', 'prof.carlos@unixablau.pt'),
+  ('Prof. Ana', 'Ciência de Dados', 'prof.ana@unixablau.pt'),
+  ('Prof. Miguel', 'Redes de Computadores', 'prof.miguel@unixablau.pt');
+
+-- Criação da tabela matriculas
+CREATE TABLE IF NOT EXISTS matriculas (
+  ID int NOT NULL AUTO_INCREMENT,
+  AlunoID int NOT NULL,
+  CursoID int NOT NULL,
+  DataMatricula date NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (AlunoID) REFERENCES alunos(ID),
+  FOREIGN KEY (CursoID) REFERENCES cursos(ID)
+);
+
+-- Inserção de dados na tabela matriculas
+INSERT INTO matriculas (AlunoID, CursoID, DataMatricula)
+VALUES
+  (1, 1, '2023-08-09'),
+  (2, 1, '2023-08-09'),
+  (3, 2, '2023-08-09'),
+  (4, 3, '2023-08-09'),
+  (5, 4, '2023-08-09');
+  
+-- Criação da tabela departamentos
+CREATE TABLE IF NOT EXISTS departamentos (
+  ID int NOT NULL AUTO_INCREMENT,
+  Nome varchar(50) NOT NULL,
+  Localizacao varchar(100) DEFAULT NULL,
+  PRIMARY KEY (ID)
+);
+
+-- Inserção de dados na tabela departamentos
+INSERT INTO departamentos (Nome, Localizacao)
+VALUES
+  ('Departamento de Informática', 'Bloco A, Sala 101'),
+  ('Departamento de Ciências Sociais', 'Bloco B, Sala 201'),
+  ('Departamento de Engenharia', 'Bloco C, Sala 301');
+
+-- Criação da tabela disciplinas
+CREATE TABLE IF NOT EXISTS disciplinas (
+  ID int NOT NULL AUTO_INCREMENT,
+  Nome varchar(100) NOT NULL,
+  DepartamentoID int NOT NULL,
+  ProfessorID int NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (DepartamentoID) REFERENCES departamentos(ID),
+  FOREIGN KEY (ProfessorID) REFERENCES professores(ID)
+);
+
+-- Inserção de dados na tabela disciplinas
+INSERT INTO disciplinas (Nome, DepartamentoID, ProfessorID)
+VALUES
+  ('Programação Avançada', 1, 1),
+  ('Estatística', 2, 2),
+  ('Redes de Computadores', 1, 3);
+  
+CREATE TABLE IF NOT EXISTS funcionarios_admin (
+  ID int NOT NULL AUTO_INCREMENT,
+  Nome varchar(50) NOT NULL,
+  DepartamentoID int NOT NULL,
+  Cargo varchar(50) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (DepartamentoID) REFERENCES departamentos(ID)
+);
+
+-- Inserção de dados na tabela funcionarios_admin
+INSERT INTO funcionarios_admin (Nome, DepartamentoID, Cargo)
+VALUES
+  ('Mariana Santos', 1, 'Secretária'),
+  ('Rui Silva', 2, 'Assistente Administrativo'),
+  ('Sofia Costa', 3, 'Coordenador Administrativo');
+
+-- Criação da tabela notas
+CREATE TABLE IF NOT EXISTS notas (
+  ID int NOT NULL AUTO_INCREMENT,
+  AlunoID int NOT NULL,
+  DisciplinaID int NOT NULL,
+  Nota decimal(4, 2) DEFAULT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (AlunoID) REFERENCES alunos(ID),
+  FOREIGN KEY (DisciplinaID) REFERENCES disciplinas(ID)
+);
+
+-- Inserção de dados na tabela notas
+INSERT INTO notas (AlunoID, DisciplinaID, Nota)
+VALUES
+  (1, 1, 16.5),
+  (1, 2, 14.2),
+  (2, 1, 18.7),
+  (2, 2, 15.9),
+  (3, 1, 12.8),
+  (3, 3, 17.3),
+  (4, 3, 13.5),
+  (5, 2, 19.1);
+  
+CREATE TABLE Distritos(id INT, cod_distrito INT, nome_distrito VARCHAR(50));
+INSERT INTO Distritos (id, cod_distrito, nome_distrito) VALUES 
+(1,1,'Aveiro'),
+(2,2,'Beja'),
+(3,3,'Braga'),
+(4,4,'Bragança'),
+(5,5,'Castelo Branco'),
+(6,6,'Coimbra'),
+(7,7,'Êvora'),
+(8,8,'Faro'),
+(9,9,'Guarda'),
+(10,10,'Leiria'),
+(11,11,'Lisboa'),
+(12,12,'Portalegre'),
+(13,13,'Porto'),
+(14,14,'Santarém'),
+(15,15,'Setubal'),
+(16,16,'Viana do Castelo'),
+(17,17,'Vila Real'),
+(18,18,'Viseu'),
+(19,31,'Ilha da Madeira'),
+(20,32,'Ilha de Porto Santo'),
+(21,41,'Ilha de Santa Maria'),
+(22,42,'Ilha de São Miguel'),
+(23,43,'Ilha Terceira'),
+(24,44,'Ilha da Graciosa'),
+(25,45,'Ilha de São Jorge'),
+(26,46,'Ilha do Pico'),
+(27,47,'Ilha do Faial'),
+(28,48,'Ilha das Flores'),
+(29,49,'Ilha do Corvo');
